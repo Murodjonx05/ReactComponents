@@ -97,6 +97,9 @@ const ProductCard = React.memo((props) => {
         titleClassName, titleLinkStyle, imageContainerStyle,
     } = props;
 
+    // Guard against null/undefined product
+    if (!product) return null;
+
     const [hovered, setHovered] = useState(false);
     const [loaded, setLoaded] = useState(false);
     const imgRef = useRef(null);
@@ -109,6 +112,7 @@ const ProductCard = React.memo((props) => {
     const handleMouseEnter = useCallback(() => setHovered(true), []);
     const handleMouseLeave = useCallback(() => setHovered(false), []);
     const handleImageLoad = useCallback(() => setLoaded(true), []);
+    const handleImageError = useCallback(() => setLoaded(true), []); // Hide shimmer on error too
 
     const d = useDefaultStyles ? defaultStyles : {};
     const _imgObjectFit = imgObjectFit ?? (d.image?.objectFit ?? "cover");
@@ -153,7 +157,7 @@ const ProductCard = React.memo((props) => {
         const transition = _enableHoverAnimation ? `transform ${_animationDuration} ${_animationTiming}, filter ${_animationDuration} ${_animationTiming}` : "none";
         return {
             width: "100%", height: "100%", objectFit: _imgObjectFit, transition,
-            transform: hovered ? `scale(${_imgUpscaleFactor})` : "scale(1)",
+            transform: hovered ? `scale(${parseFloat(_imgUpscaleFactor) || 1.1})` : "scale(1)",
             filter: hovered ? _imgHoverFilter : "none", ...imgStyle,
         };
     }, [_imgObjectFit, _enableHoverAnimation, _animationDuration, _animationTiming, hovered, _imgUpscaleFactor, _imgHoverFilter, imgStyle]);
@@ -171,7 +175,7 @@ const ProductCard = React.memo((props) => {
         <div className={cardClassName || ""} style={cardStyles} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <div style={containerStyles}>
                 <div className={`pc-shimmer${loaded ? " pc-shimmer-hide" : ""}`} style={{ backgroundColor: bgColor }} aria-hidden="true" />
-                <img ref={imgRef} className={`pc-img ${imageClassName || ""}${loaded ? " pc-img-show" : ""}`} src={product.image} alt={product.name} style={imgStyles} decoding="async" onLoad={handleImageLoad} />
+                <img ref={imgRef} className={`pc-img ${imageClassName || ""}${loaded ? " pc-img-show" : ""}`} src={product.image} alt={product.name} style={imgStyles} decoding="async" onLoad={handleImageLoad} onError={handleImageError} />
             </div>
             <div className={overlayClassName || ""} style={overlayStyles}>
                 <h2 className={titleClassName || ""} style={h2Style}>
@@ -185,7 +189,6 @@ const ProductCard = React.memo((props) => {
 ProductCard.displayName = "ProductCard";
 
 export default ProductCard;
-
 
 // My demmo setup
 {/* 
