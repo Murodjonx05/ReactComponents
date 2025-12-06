@@ -31,7 +31,7 @@ export const DEFAULT_STYLES = {
     },
     overlay: {
         gradient: "black-60",
-        padding: "24px 16px",
+        padding: "12px 16px",
     },
 };
 
@@ -286,7 +286,7 @@ const ProductCard = React.memo((props) => {
     const _animationDuration = animationDuration ?? (useDefaultStyles ? defaultStyles.animation.duration : "0.3s");
     const _animationTiming = animationTiming ?? (useDefaultStyles ? defaultStyles.animation.timing : "ease");
     const _overlayGradient = overlayGradient ?? (useDefaultStyles ? defaultStyles.overlay.gradient : "black-60");
-    const _overlayPadding = overlayPadding ?? (useDefaultStyles ? defaultStyles.overlay.padding : "24px 16px");
+    const _overlayPadding = overlayPadding ?? (useDefaultStyles ? defaultStyles.overlay.padding : "12px 16px");
 
     // Calculate size
     const sizeStyles = useMemo(
